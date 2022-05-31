@@ -24,4 +24,6 @@ steps:
       - --memory=256Mi
       - --concurrency=80
       - --tag=$BRANCH_NAME
+      - --vpc-connector=iron-connector2
+      - --vpc-egress=all-traffic
       - --image=asia-northeast1-docker.pkg.dev/$PROJECT_ID/nateer/$BRANCH_NAME:$COMMIT_SHA
