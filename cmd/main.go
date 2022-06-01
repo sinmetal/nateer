@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"cloud.google.com/go/datastore"
+	"cloud.google.com/go/spanner"
 	"github.com/sinmetal/nateer"
 	metadatabox "github.com/sinmetalcraft/gcpbox/metadata"
 )
@@ -32,7 +33,16 @@ func main() {
 		panic(err)
 	}
 
-	externalSendRequestHandler, err := nateer.NewExternalSendRequestHandler(ctx, sampleDSStore)
+	spa, err := spanner.NewClient(ctx, fmt.Sprintf("projects/%s/instances/%s/databases/%s", "gcpug-public-spanner", "merpay-sponsored-instance", "sinmetal"))
+	if err != nil {
+		panic(err)
+	}
+	userStore, err := nateer.NewUserStore(ctx, spa)
+	if err != nil {
+		panic(err)
+	}
+
+	externalSendRequestHandler, err := nateer.NewExternalSendRequestHandler(ctx, sampleDSStore, userStore)
 	if err != nil {
 		panic(err)
 	}
