@@ -31,7 +31,7 @@ func (s *SampleDSStore) Kind(ctx context.Context) string {
 
 func (s *SampleDSStore) Create(ctx context.Context, entity *SampleDSEntity) (*SampleDSEntity, error) {
 	key := datastore.NameKey(s.Kind(ctx), entity.ID, nil)
-	m := datastore.NewInsert(key, &entity)
+	m := datastore.NewInsert(key, entity)
 	_, err := s.ds.Mutate(ctx, m)
 	if err != nil {
 		return nil, err

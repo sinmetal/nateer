@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"os"
 
+	"cloud.google.com/go/datastore"
 	"github.com/sinmetal/nateer"
+	metadatabox "github.com/sinmetalcraft/gcpbox/metadata"
 )
 
 func main() {
@@ -15,7 +17,22 @@ func main() {
 
 	ctx := context.Background()
 
-	externalSendRequestHandler, err := nateer.NewExternalSendRequestHandler(ctx)
+	gcProjectID, err := metadatabox.ProjectID()
+	if err != nil {
+		panic(err)
+	}
+
+	ds, err := datastore.NewClient(ctx, gcProjectID)
+	if err != nil {
+		panic(err)
+	}
+
+	sampleDSStore, err := nateer.NewSampleDSStore(ctx, ds)
+	if err != nil {
+		panic(err)
+	}
+
+	externalSendRequestHandler, err := nateer.NewExternalSendRequestHandler(ctx, sampleDSStore)
 	if err != nil {
 		panic(err)
 	}
